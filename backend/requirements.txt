@@ -5,8 +5,11 @@ chardet==4.0.0
 click==8.0.1
 colorama==0.4.4
 Django==3.0.5
+django-colorfield
 django-filter==2.4.0
 djangorestframework==3.11.0
+djoser==2.1.0
+drf-extra-fields==3.1.1
 idna==2.10
 importlib-metadata==4.3.1
 iniconfig==1.1.1
@@ -17,6 +20,7 @@ py==1.10.0
 pyparsing==2.4.7
 pytest==6.2.4
 pytest-django==4.3.0
+pytils
 requests==2.25.1
 sqlparse==0.3.1
 toml==0.10.2
