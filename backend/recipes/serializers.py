@@ -68,11 +68,12 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
 class RecipeWriteSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
-    inage = Base64ImageField()
+    image = Base64ImageField()
     ingredients = IngredientsSerializer(many=True)
     tag = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
     )
+    cooking_time = serializers.IntegerField()
 
     class Meta:
         model = Recipe
@@ -102,7 +103,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         recipe.text = validated_data.get('text', recipe.text)
         recipe.cooking_time = validated_data.get('cooking_time',
                                                  recipe.cooking_time)
-        recipe.pic = validated_data.get('image', recipe.image)
+        recipe.image = validated_data.get('image', recipe.image)
         recipe.save()
         return recipe
 

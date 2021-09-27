@@ -13,8 +13,8 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'title', 'measure')
-    list_filter = ('title', )
+    list_display = ('pk', 'name', 'measurement_unit')
+    list_filter = ('name', )
 
 
 @admin.register(Follow)
@@ -26,9 +26,9 @@ class FollowAdmin(admin.ModelAdmin):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'title', 'author', 'get_ingredients')
-    search_fields = ('title', 'author')
-    list_filter = ('author', 'title', 'tag')
+    list_display = ('pk', 'name', 'author', 'get_ingredients')
+    search_fields = ('name', 'author')
+    list_filter = ('author', 'name', 'tags')
     empty_value_display = '-пусто-'
 
     def get_ingredients(self):
@@ -36,7 +36,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'code', 'slug')
+    list_display = ('pk', 'name', 'color', 'slug')
     search_fields = ('pk', 'name')
     list_filter = ('name', 'slug')
     empty_value_display = '-пусто-'

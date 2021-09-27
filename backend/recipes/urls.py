@@ -2,25 +2,24 @@ from django.db.models import base
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from . import views
 from .views import (
      DownloadShoppingCart, FavoritesView, 
-     FollowViewSet, IngredientsViewSet, ShoppingCartView,
+     FollowViewSet, IngredientsViewSet, RecipeViewSet,
      ShoppingCartView, TagsViewSet
 )
 
 router = DefaultRouter()
 
-router.register('ingredients', views.IngredientsViewSet, basename='ingredients')
-router.register('recipes', views.RecipeViewSet, basename='recipe')
-router.register('tags', views.TagsViewSet, basename='tags')
+router.register('ingredients', IngredientsViewSet, basename='ingredients')
+router.register('recipes', RecipeViewSet, basename='recipe')
+router.register('tags', TagsViewSet, basename='tags')
 
 
 urlpatterns = [
     path('users/<int:author_id>/subscribe/',
-         FollowViewSet.as_view(),
+         FollowViewSet.as_view({"get": "create", "delete": "destroy"}),
          name='subscribe'),
-    path('users/subscriptions/', FollowViewSet.as_view(),
+    path('users/subscriptions/', FollowViewSet.as_view({"get": "list"}),
          name='subscriptions'),
     path('recipes/<int:recipe_id>/favorite/',
          FavoritesView.as_view(),

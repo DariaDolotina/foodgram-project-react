@@ -6,6 +6,7 @@ from recipes.models import Recipe
 from .models import User
 from recipes.models import Follow
 
+
 class UserSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
 

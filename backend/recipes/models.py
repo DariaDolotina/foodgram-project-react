@@ -70,7 +70,7 @@ class Recipe(models.Model):
     )
 
     class Meta:
-        ordering = ['title']
+        ordering = ['name']
 
     def __str__(self):
         return self.text[:15]
