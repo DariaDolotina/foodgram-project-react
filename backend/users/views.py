@@ -5,7 +5,7 @@ from .models import User
 from .serializers import UserSerializer
 
 
-class CustomUserViewSet(UserViewSet):
+class UserViewSet(UserViewSet):
     serializer_class = UserSerializer(many=True)
     queryset = User.objects.all()
     permission_classes = [AllowAny, ]
