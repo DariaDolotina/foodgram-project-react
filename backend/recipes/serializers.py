@@ -13,15 +13,15 @@ from .models import (Favorites, Follow, Ingredient, IngredientAmount, Recipe,
 class RecipeForAnonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = ('id', 'author', 'title', 'pic', 'time')
+        fields = ('id', 'author', 'name', 'image', 'cooking_time')
 
 
 class IngredientsSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Ingredient
-        fields = ('id', 'title', 'measure')
-        read_only_fields = ('id', 'title', 'measure')
+        fields = ('id', 'name', 'measurement_unit')
+        read_only_fields = ('id', 'name', 'measurement_unit')
 
 
 class TagSerializer(serializers.ModelSerializer):

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'rest_framework',
+    'rest_framework.authtoken',
     'recipes',
     'sorl.thumbnail',
     'users',
@@ -142,6 +143,13 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'users/reset_password/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': 'users/reset_email/{uid}/{token}',
     'ACTIVATION_URL': 'users/activation/{uid}/{token}',
+    'SERIALIZERS': {
+        'user': 'users.serializers.UserSerializer',
+    },
+    'PERMISSIONS': {
+        'user': ['rest_framework.permissions.IsAuthenticated'],
+        'user_list': ['rest_framework.permissions.AllowAny'],
+    }
 }
 
 
