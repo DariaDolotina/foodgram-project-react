@@ -1,12 +1,9 @@
 from django.urls import include, path
-from rest_framework.routers import DefaultRouter
-
-from .views import UserViewSet
-
-router = DefaultRouter()
-router.register('users', UserViewSet)
+from djoser import views
 
 urlpatterns = [
     path('', include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
+    path('auth/token/login/', views.TokenCreateView.as_view(), name='login'),
+    path('auth/token/logout/', views.TokenDestroyView.as_view(),
+         name='logout'),
 ]

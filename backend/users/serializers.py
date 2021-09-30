@@ -1,10 +1,7 @@
-from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
 
-from recipes.models import Recipe
-from .models import User
 from recipes.models import Follow
+from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):

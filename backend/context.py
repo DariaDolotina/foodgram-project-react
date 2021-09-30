@@ -1,7 +1,7 @@
 import csv
 from recipes.models import Ingredient
 
-CSV_PATH = 'C:/dev/recipes/food/data/ingredients.csv'
+CSV_PATH = 'data/ingredients.csv'
 
 with open(CSV_PATH, newline='', encoding='utf-8') as csvfile:
     reader1 = csv.reader(csvfile, delimiter=",")

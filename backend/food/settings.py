@@ -27,7 +27,12 @@ SECRET_KEY = 'bv@k*n%vv*pssdrx1((v^#=0*v53e@@nby6w5e@d)%=z_^qo5e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '*',
+    'web',
+    '127.0.0.1',
+    'localhost',
+]
 
 
 # Application definition
@@ -43,7 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'recipes',
-    'sorl.thumbnail',
+    # 'sorl.thumbnail',
     'users',
     'colorfield',
     'djoser',
@@ -66,14 +71,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'food.urls'
 
-PAR_PAGE = 10
-
-TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+# TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATES_DIR],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,20 +97,27 @@ WSGI_APPLICATION = 'food.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DB_ENGINE'),
-        'NAME': os.environ.get('POSTGRES_DB'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'db',
+        'PORT': '5432',
+        # 'ENGINE': os.environ.get('DB_ENGINE'),
+        # 'NAME': os.environ.get('POSTGRES_DB'),
+        # 'USER': os.environ.get('POSTGRES_USER'),
+        # 'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        # 'HOST': os.environ.get('DB_HOST'),
+        # 'PORT': os.environ.get('DB_PORT'),
     }
 }
-DB_ENGINE=django.db.backends.postgresql
-DB_NAME=postgres
-DB_USER=postgres
-POSTGRES_PASSWORD=postgres
-DB_HOST=db
-DB_PORT=5432
+
+# DB_ENGINE=django.db.backends.postgresql
+# DB_NAME=postgres
+# DB_USER=postgres
+# POSTGRES_PASSWORD=postgres
+# DB_HOST=db
+# DB_PORT=5432
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -165,7 +175,7 @@ DJOSER = {
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
@@ -173,7 +183,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
