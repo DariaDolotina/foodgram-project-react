@@ -80,7 +80,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'author', 'title', 'text', 'pic',
             'ingredients', 'tag', 'time',
-            )
+        )
 
     def create(self, validated_data):
         author = self.context.get('request').user

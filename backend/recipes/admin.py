@@ -4,6 +4,7 @@ from users.models import User
 
 from .models import Ingredient, Follow, Recipe, Tag
 
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (

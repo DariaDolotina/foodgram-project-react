@@ -92,7 +92,7 @@ class IngredientAmount(models.Model):
         Ingredient, on_delete=models.CASCADE,
         related_name='amounts',
     )
-    
+
     class Meta:
         auto_created = True
         verbose_name = 'Количество в рецепте'
