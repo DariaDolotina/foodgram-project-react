@@ -2,7 +2,6 @@ from colorfield.fields import ColorField
 from django.core.validators import MinValueValidator
 from django.db import models
 from pytils.translit import slugify
-
 from users.models import User
 
 
@@ -84,14 +83,15 @@ class Recipe(models.Model):
 class IngredientAmount(models.Model):
     amount = models.PositiveIntegerField(
         validators=[MinValueValidator(0.1)]
-        )
+    )
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE,
         related_name='amounts',
-        )
+    )
     ingredient = models.ForeignKey(
         Ingredient, on_delete=models.CASCADE,
-        related_name='amounts',)
+        related_name='amounts',
+    )
     
     class Meta:
         auto_created = True
@@ -154,11 +154,11 @@ class ShoppingCart(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name='shopping_cart'
-        )
+    )
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE,
         related_name='shopping_cart'
-        )
+    )
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=['user', 'recipe'],
