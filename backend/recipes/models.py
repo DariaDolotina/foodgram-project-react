@@ -24,6 +24,7 @@ class Ingredient(models.Model):
     def __str__(self):
         return f'{self.name}, {self.measurement_unit}'
 
+
 class Tag(models.Model):
     name = models.CharField(max_length=200, unique=True)
     color = ColorField(default='#FF0000')
@@ -40,6 +41,7 @@ class Tag(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
 
 class Recipe(models.Model):
     author = models.ForeignKey(
@@ -75,6 +77,7 @@ class Recipe(models.Model):
     def __str__(self):
         return self.text[:15]
 
+
 class IngredientAmount(models.Model):
     amount = models.PositiveIntegerField(
         validators=[MinValueValidator(0.1)]
@@ -93,6 +96,7 @@ class IngredientAmount(models.Model):
 
     def __str__(self):
         return (self.ingredient.name)
+
 
 class Follow(models.Model):
     user = models.ForeignKey(
@@ -115,6 +119,7 @@ class Follow(models.Model):
 
     def __str__(self):
         return f'{self.user} подписан на {self.author}'
+
 
 class Favorites(models.Model):
     user = models.ForeignKey(
@@ -140,6 +145,7 @@ class Favorites(models.Model):
 
     def __str__(self):
         return f'Рецепт {self.recipe} добавлен в избранное {self.user}'
+
 
 class ShoppingCart(models.Model):
     user = models.ForeignKey(

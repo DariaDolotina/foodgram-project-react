@@ -1,4 +1,5 @@
 import csv
+
 from recipes.models import Ingredient
 
 CSV_PATH = 'data/ingredients.csv'

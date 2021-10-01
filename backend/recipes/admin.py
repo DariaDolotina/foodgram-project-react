@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-
 from .models import Ingredient, Follow, Recipe, Tag
 from users.models import User
 
@@ -10,6 +9,7 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ('username', 'email')
     list_filter = ('username', 'email', 'first_name')
     empty_value_display = '-пусто-'
+
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
@@ -33,6 +33,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
     def get_ingredients(self):
         return "\n".join([p.ingredients for p in self.ingredient.all()])
+
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):

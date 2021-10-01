@@ -120,7 +120,7 @@ class RecipeSubscriptionSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    
+
     user = serializers.SlugRelatedField(
         slug_field='username',
         read_only=True,
@@ -152,7 +152,7 @@ class FollowSerializer(serializers.ModelSerializer):
 class FavoritesSerializer(serializers.ModelSerializer):
     recipe = serializers.PrimaryKeyRelatedField(queryset=Recipe.objects.all())
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    
+
     class Meta:
         model = Favorites
         fields = '__all__'
