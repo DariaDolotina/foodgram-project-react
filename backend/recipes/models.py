@@ -10,17 +10,17 @@ class Ingredient(models.Model):
     name = models.CharField(
         max_length=200,
         verbose_name='Название'
-        )
+    )
     measurement_unit = models.CharField(
         max_length=200,
         verbose_name='Единица измерения'
-        )
-    
+    )
+
     class Meta:
         ordering = ('name', )
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
-    
+
     def __str__(self):
         return f'{self.name}, {self.measurement_unit}'
 
@@ -29,7 +29,7 @@ class Tag(models.Model):
     name = models.CharField(max_length=200, unique=True)
     color = ColorField(default='#FF0000')
     slug = models.SlugField(unique=True, blank=True)
-    
+
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
@@ -51,11 +51,12 @@ class Recipe(models.Model):
     image = models.ImageField(
         upload_to='recipes/',
         verbose_name='Фото'
-        )
+    )
     text = models.TextField(
         verbose_name='Описание', help_text='Введите текст'
     )
-    ingredients = models.ManyToManyField(Ingredient, through='IngredientAmount',
+    ingredients = models.ManyToManyField(
+        Ingredient, through='IngredientAmount',
         related_name='recipes', verbose_name='Ингредиенты'
     )
     tags = models.ManyToManyField(
@@ -63,8 +64,10 @@ class Recipe(models.Model):
         related_name='recipes',
         verbose_name='Теги'
     )
-    cooking_time = models.DecimalField(max_digits=5, decimal_places=2,
-    verbose_name='Время приготовления')
+    cooking_time = models.DecimalField(
+        max_digits=5, decimal_places=2,
+        verbose_name='Время приготовления'
+    )
     pub_date = models.DateTimeField(
         auto_now_add=True,
         db_index=True,

@@ -52,7 +52,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if self.request.method == 'GET':
             return RecipeReadSerializer
         return RecipeWriteSerializer
-    
+
     @action(methods=["GET", "DELETE"],
             url_path='favorite', url_name='favorite',
             permission_classes=[permissions.IsAuthenticated], detail=True)

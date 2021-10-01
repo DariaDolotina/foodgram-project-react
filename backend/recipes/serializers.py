@@ -17,7 +17,7 @@ class RecipeForAnonSerializer(serializers.ModelSerializer):
 
 
 class IngredientsSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Ingredient
         fields = ('id', 'name', 'measurement_unit')
@@ -53,8 +53,8 @@ class RecipeReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
-                'id', 'author', 'title', 'text', 'pic',
-                'ingredients', 'tag', 'time',
+            'id', 'author', 'title', 'text', 'pic',
+            'ingredients', 'tag', 'time',
                 )
 
     def get_is_favorited(self, obj):
@@ -78,9 +78,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
-                'id', 'author', 'title', 'text', 'pic',
-                'ingredients', 'tag', 'time',
-                )
+            'id', 'author', 'title', 'text', 'pic',
+            'ingredients', 'tag', 'time',
+            )
 
     def create(self, validated_data):
         author = self.context.get('request').user
@@ -108,8 +108,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         return recipe
 
     def to_representation(self, recipe):
-        data = RecipeWriteSerializer(recipe, context={'request':
-                                    self.context.get('request')}).data
+        data = RecipeWriteSerializer(
+            recipe, context={'request':self.context.get('request')}
+            ).data
         return data
 
 

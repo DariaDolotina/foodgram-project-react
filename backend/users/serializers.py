@@ -1,7 +1,8 @@
-from rest_framework import serializers
+from rest_framework import serializers as s
+
+from recipes.models import Follow
 
 from .models import User
-from recipes.models import Follow
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -16,4 +17,6 @@ class UserSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
-        return Follow.objects.filter(user=request.user, author=obj).exists()
+        return Follow.objects.filter(
+            user=request.user, author=obj
+            ).exists()
