@@ -1,11 +1,15 @@
 from django.contrib import admin
 
-from .models import Ingredient, Follow, Recipe, Tag
 from users.models import User
+
+from .models import Ingredient, Follow, Recipe, Tag
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'username', 'password', 'email', 'first_name', 'last_name')
+    list_display = (
+        'pk', 'username', 'password',
+        'email', 'first_name', 'last_name'
+    )
     search_fields = ('username', 'email')
     list_filter = ('username', 'email', 'first_name')
     empty_value_display = '-пусто-'
