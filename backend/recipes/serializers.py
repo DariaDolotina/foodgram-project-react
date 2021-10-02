@@ -6,7 +6,7 @@ from rest_framework.validators import UniqueTogetherValidator
 from users.models import User
 from users.serializers import UserSerializer
 
-from .models import (Favorites, Follow, Ingredient, IngredientAmount, Recipe,
+from .models import (Favorite, Follow, Ingredient, IngredientAmount, Recipe,
                      ShoppingCart, Tag)
 
 
@@ -149,12 +149,12 @@ class FollowSerializer(serializers.ModelSerializer):
         return following
 
 
-class FavoritesSerializer(serializers.ModelSerializer):
+class FavoriteSerializer(serializers.ModelSerializer):
     recipe = serializers.PrimaryKeyRelatedField(queryset=Recipe.objects.all())
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     
     class Meta:
-        model = Favorites
+        model = Favorite
         fields = '__all__'
 
 

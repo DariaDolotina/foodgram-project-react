@@ -2,7 +2,6 @@ from colorfield.fields import ColorField
 from django.core.validators import MinValueValidator
 from django.db import models
 from pytils.translit import slugify
-
 from users.models import User
 
 
@@ -27,7 +26,7 @@ class Ingredient(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=200, unique=True)
     color = ColorField(default='#FF0000')
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True)
     
     class Meta:
         verbose_name = 'Тег'
@@ -61,8 +60,10 @@ class Recipe(models.Model):
         related_name='recipes',
         verbose_name='Теги'
     )
-    cooking_time = models.DecimalField(max_digits=5, decimal_places=2,
-    verbose_name='Время приготовления')
+    cooking_time = models.DecimalField(
+        max_digits=5, decimal_places=2,
+        verbose_name='Время приготовления'
+    )
     pub_date = models.DateTimeField(
         auto_now_add=True,
         db_index=True,
@@ -92,7 +93,7 @@ class IngredientAmount(models.Model):
         verbose_name = 'Количество в рецепте'
 
     def __str__(self):
-        return (self.ingredient.name)
+        return self.ingredient.name
 
 class Follow(models.Model):
     user = models.ForeignKey(
@@ -116,7 +117,7 @@ class Follow(models.Model):
     def __str__(self):
         return f'{self.user} подписан на {self.author}'
 
-class Favorites(models.Model):
+class Favorite(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

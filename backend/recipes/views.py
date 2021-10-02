@@ -1,21 +1,20 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import mixins, permissions, viewsets, status
+from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .filters import IngredientFilter, RecipeFilter
-from .models import (Follow, Ingredient, IngredientAmount,
-                     Recipe, Favorites, ShoppingCart, Tag)
-from .serializers import (IngredientsSerializer, TagSerializer,
-                          FavoritesSerializer, FollowSerializer,
-                          RecipeWriteSerializer,
-                          RecipeReadSerializer,
-                          RecipeSubscriptionSerializer,
-                          ShoppingCartSerializer)
-from .permissions import IsAdminOrIsAuthorOrReadOnly
 from users.models import User
+
+from .filters import IngredientFilter, RecipeFilter
+from .models import (Favorite, Follow, Ingredient, IngredientAmount, Recipe,
+                     ShoppingCart, Tag)
+from .permissions import IsAdminOrIsAuthorOrReadOnly
+from .serializers import (FavoriteSerializer, FollowSerializer,
+                          IngredientsSerializer, RecipeReadSerializer,
+                          RecipeSubscriptionSerializer, RecipeWriteSerializer,
+                          ShoppingCartSerializer, TagSerializer)
 
 
 class RetriveAndListViewSet(
@@ -58,7 +57,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             permission_classes=[permissions.IsAuthenticated], detail=True)
     def favorite(self, request, pk):
         recipe = get_object_or_404(Recipe, id=pk)
-        serializer = FavoritesSerializer(
+        serializer = FavoriteSerializer(
             data={'user': request.user.id, 'recipe': recipe.id}
         )
         if request.method == "GET":
@@ -67,7 +66,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             serializer = RecipeSubscriptionSerializer(recipe)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         favorite = get_object_or_404(
-            Favorites, user=request.user, recipe__id=pk
+            Favorite, user=request.user, recipe__id=pk
         )
         favorite.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -93,7 +92,7 @@ class FollowViewSet(viewsets.ModelViewSet):
         follow.delete()
 
 
-class FavoritesView(APIView):
+class FavoriteView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, recipe_id):
@@ -102,7 +101,7 @@ class FavoritesView(APIView):
             'user': user.id,
             'recipe': recipe_id,
         }
-        serializer = FavoritesSerializer(
+        serializer = FavoriteSerializer(
             data=data,
             context={'request': request}
         )
@@ -118,7 +117,7 @@ class FavoritesView(APIView):
     def delete(self, request, recipe_id):
         user = request.user
         recipe = get_object_or_404(Recipe, id=recipe_id)
-        obj = get_object_or_404(Favorites, user=user, recipe=recipe)
+        obj = get_object_or_404(Favorite, user=user, recipe=recipe)
         obj.delete()
 
         return Response(
