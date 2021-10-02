@@ -1,3 +1,4 @@
+from django.db.models import F
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
@@ -6,7 +7,7 @@ from rest_framework.validators import UniqueTogetherValidator
 from users.models import User
 from users.serializers import UserSerializer
 
-from .models import (Favorites, Follow, Ingredient, IngredientAmount, Recipe,
+from .models import (Favorite, Follow, Ingredient, IngredientAmount, Recipe,
                      ShoppingCart, Tag)
 
 
@@ -82,6 +83,41 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             'ingredients', 'tag', 'time',
         )
 
+    def validate(self, data):
+        ingredients = self.initial_data.get('ingredients')
+        cooking_time = self.initial_data.get('cooking_time')
+        for ingredient in ingredients:
+            if int(ingredient['amount']) <= 0:
+                raise serializers.ValidationError({
+                    'ingredients': (
+                        'Значение должно быть положительным'
+                    )
+                })
+        if int(cooking_time) <= 0:
+            raise serializers.ValidationError({
+                'cooking_time': (
+                    'Значение должно быть положительным'
+                )
+            })
+        return data
+    
+    def validate_tags(self, tag):
+        if not tag:
+            raise ValidationError(
+                "Выберите минимум один тег"
+            )
+        return tag
+
+    def add_recipe_ingredients(self, ingredients, recipe):
+        for ingredient in ingredients:
+            ingredient_id = ingredient['id']
+            amount = ingredient['amount']
+            if (IngredientAmount.objects.filter(
+                    recipe=recipe, ingredient=ingredient_id).exists()):
+                amount += F('amount')
+            IngredientAmount.objects.update_or_create(
+                recipe, ingredient=ingredient_id, defaults={'amount': amount})
+
     def create(self, validated_data):
         author = self.context.get('request').user
         tags_data = validated_data.pop('tag')
@@ -95,7 +131,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                 recipe=recipe, amount=amount
             )
         for tag in tags_data:
-            recipe.tag.add(tag)
+            recipe.tags.add(tag)
         return recipe
 
     def update(self, recipe, validated_data):
@@ -104,6 +140,13 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         recipe.cooking_time = validated_data.get('cooking_time',
                                                  recipe.cooking_time)
         recipe.image = validated_data.get('image', recipe.image)
+        if 'ingredients' in self.initial_data:
+            ingredients = validated_data.pop('ingredients')
+            recipe.ingredients.clear()
+            self.add_recipe_ingredients(ingredients, recipe)
+        if 'tags' in self.initial_data:
+            tags_data = validated_data.pop('tags')
+            recipe.tags.set(tags_data)
         recipe.save()
         return recipe
 
@@ -146,7 +189,7 @@ class FollowSerializer(serializers.ModelSerializer):
     def validate_following(self, following):
         if self.context.get('request').method == 'POST':
             if self.context.get('request').user == following:
-                raise serializers.ValidationError
+                raise ValidationError('Нельзя подписаться на себя')
         return following
 
 
@@ -155,7 +198,7 @@ class FavoritesSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
-        model = Favorites
+        model = Favorite
         fields = '__all__'
 
 

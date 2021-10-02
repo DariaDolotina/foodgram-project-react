@@ -1,27 +1,22 @@
+from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import mixins, permissions, status, viewsets
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from users.models import User
 
 from .filters import IngredientFilter, RecipeFilter
-from .models import (Favorites, Follow, Ingredient, IngredientAmount, Recipe,
+from .mixins import RetriveAndListViewSet
+from .models import (Favorite, Follow, Ingredient, IngredientAmount, Recipe,
                      ShoppingCart, Tag)
 from .permissions import IsAdminOrIsAuthorOrReadOnly
 from .serializers import (FavoritesSerializer, FollowSerializer,
                           IngredientsSerializer, RecipeReadSerializer,
                           RecipeSubscriptionSerializer, RecipeWriteSerializer,
                           ShoppingCartSerializer, TagSerializer)
-
-
-class RetriveAndListViewSet(
-        mixins.ListModelMixin,
-        mixins.RetrieveModelMixin,
-        viewsets.GenericViewSet):
-    pass
 
 
 class IngredientsViewSet(RetriveAndListViewSet):
@@ -66,7 +61,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             serializer = RecipeSubscriptionSerializer(recipe)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         favorite = get_object_or_404(
-            Favorites, user=request.user, recipe__id=pk
+            Favorite, user=request.user, recipe__id=pk
         )
         favorite.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -105,9 +100,8 @@ class FavoritesView(APIView):
             data=data,
             context={'request': request}
         )
-
-        if serializer.is_valid():
-            serializer.save()
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
         return Response(
             serializer.data,
@@ -117,7 +111,7 @@ class FavoritesView(APIView):
     def delete(self, request, recipe_id):
         user = request.user
         recipe = get_object_or_404(Recipe, id=recipe_id)
-        obj = get_object_or_404(Favorites, user=user, recipe=recipe)
+        obj = get_object_or_404(Favorite, user=user, recipe=recipe)
         obj.delete()
 
         return Response(
@@ -139,8 +133,8 @@ class ShoppingCartView(APIView):
         context = {'request': request}
         serializer = ShoppingCartSerializer(data=data, context=context)
 
-        if serializer.is_valid():
-            serializer.save()
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def delete(self, request, recipe_id):
@@ -160,28 +154,27 @@ class DownloadShoppingCart(APIView):
 
     def get(self, request):
         user = request.user
-        shopping_cart = user.shopping_cart.all()
+        ingredients = list(IngredientAmount.objects.filter(
+            recipe__shopping_cart__user=user).values_list(
+                'ingredients__name', 'amount', 'ingredients__measurement_unit')
+                )
         buying_list = {}
-        for record in shopping_cart:
-            recipe = record.recipe
-            ingredients = IngredientAmount.objects.filter(recipe=recipe)
-            for ingredient in ingredients:
-                amount = ingredient.amount
-                name = ingredient.ingredient.name
-                measurement_unit = ingredient.ingredient.measurement_unit
-                if name not in buying_list:
-                    buying_list[name] = {
-                        'measurement_unit': measurement_unit,
-                        'amount': amount
-                    }
-                else:
-                    buying_list[name]['amount'] = (buying_list[name]['amount']
-                                                   + amount)
-
+        for ingredient in ingredients:
+            amount = ingredient.amount
+            name = ingredient.ingredient.name
+            measurement_unit = ingredient.ingredient.measurement_unit
+            if name not in buying_list:
+                buying_list[name] = {
+                    'measurement_unit': measurement_unit,
+                    'amount': amount
+                }
+            else:
+                buying_list[name]['amount'] = (buying_list[name]['amount']
+                                                + amount)
         wishlist = []
-        for item in buying_list:
-            wishlist.append(f'{item} - {buying_list[item]["amount"]} '
-                            f'{buying_list[item]["measurement_unit"]} \n')
+        for item in ingredients:
+            wishlist.append(f'{item} - {ingredients[item]["amount"]} '
+                            f'{ingredients[item]["measurement_unit"]} \n')
         wishlist.append('\n')
         wishlist.append('FoodGram, 2021')
         response = HttpResponse(wishlist, 'Content-Type: text/plain')

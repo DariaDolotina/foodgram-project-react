@@ -63,9 +63,14 @@ class Recipe(models.Model):
         related_name='recipes',
         verbose_name='Теги'
     )
-    cooking_time = models.DecimalField(
-        max_digits=5, decimal_places=2,
-        verbose_name='Время приготовления'
+    cooking_time = models.IntegerField(
+        verbose_name='Время приготовления в минутах',
+        validators=(
+            MinValueValidator(
+                1,
+                'Минимальное значение должно быть не меньше минуты'
+            ),
+        ),
     )
     pub_date = models.DateTimeField(
         auto_now_add=True,
@@ -82,7 +87,7 @@ class Recipe(models.Model):
 
 class IngredientAmount(models.Model):
     amount = models.PositiveIntegerField(
-        validators=[MinValueValidator(0.1)]
+        validators=[MinValueValidator(0.1,'Значение не может быть меньше 0.1')]
     )
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE,
@@ -96,6 +101,12 @@ class IngredientAmount(models.Model):
     class Meta:
         auto_created = True
         verbose_name = 'Количество в рецепте'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['recipe', 'ingredient'],
+                name='unique_ingredient',
+            )
+        ]
 
     def __str__(self):
         return (self.ingredient.name)
@@ -124,7 +135,7 @@ class Follow(models.Model):
         return f'{self.user} подписан на {self.author}'
 
 
-class Favorites(models.Model):
+class Favorite(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
