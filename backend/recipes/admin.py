@@ -41,7 +41,7 @@ class RecipeAdmin(admin.ModelAdmin):
             recipe__amounts__recipe=obj
         ).values_list(
             'ingredients__name', 'amount', 'ingredients__measurement_unit'
-                )
+        )
 
     def get_favorited(self, obj):
         return Favorite.objects.filter(recipe=obj).count()

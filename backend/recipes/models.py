@@ -89,7 +89,7 @@ class IngredientAmount(models.Model):
     amount = models.PositiveIntegerField(
         validators=[
             MinValueValidator(0.1, 'Значение не может быть меньше 0.1')
-            ]
+        ]
     )
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE,
