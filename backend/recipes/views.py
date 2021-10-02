@@ -1,4 +1,3 @@
-from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -157,7 +156,7 @@ class DownloadShoppingCart(APIView):
         ingredients = list(IngredientAmount.objects.filter(
             recipe__shopping_cart__user=user).values_list(
                 'ingredients__name', 'amount', 'ingredients__measurement_unit')
-            )
+        )
         buying_list = {}
         for ingredient in ingredients:
             amount = ingredient.amount

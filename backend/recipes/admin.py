@@ -1,5 +1,4 @@
 from django.contrib import admin
-from users.models import User
 
 from users.models import User
 from .models import Ingredient, IngredientAmount, Favorite, Follow, Recipe, Tag
@@ -40,10 +39,10 @@ class RecipeAdmin(admin.ModelAdmin):
         # return "\n".join([p.ingredients for p in self.ingredient.all()])
         return IngredientAmount.objects.filter(
             recipe__amounts__recipe=obj
-            ).values_list(
+        ).values_list(
                 'ingredients__name', 'amount', 'ingredients__measurement_unit'
-                )
-        
+            )
+
     def get_favorited(self, obj):
         return Favorite.objects.filter(recipe=obj).count()
 
