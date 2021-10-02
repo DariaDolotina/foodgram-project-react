@@ -1,8 +1,7 @@
-from django.db.models import base
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import (DownloadShoppingCart, FavoriteView, FollowViewSet,
+from .views import (DownloadShoppingCart, FavoritesView, FollowViewSet,
                     IngredientsViewSet, RecipeViewSet, ShoppingCartView,
                     TagsViewSet)
 
@@ -15,12 +14,12 @@ router.register('tags', TagsViewSet, basename='tags')
 
 urlpatterns = [
     path('users/<int:author_id>/subscribe/',
-         FollowViewSet.as_view({"get": "create", "delete": "destroy"}),
+         FollowViewSet.as_view({'get': 'create', 'delete': 'destroy'}),
          name='subscribe'),
-    path('users/subscriptions/', FollowViewSet.as_view({"get": "list"}),
+    path('users/subscriptions/', FollowViewSet.as_view({'get': 'list'}),
          name='subscriptions'),
     path('recipes/<int:recipe_id>/favorite/',
-         FavoriteView.as_view(),
+         FavoritesView.as_view(),
          name='favorite'),
     path('recipes/<int:recipe_id>/shopping_cart/',
          ShoppingCartView.as_view(),

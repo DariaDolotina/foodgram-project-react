@@ -1,5 +1,4 @@
 import os
-
 from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,7 +17,6 @@ ALLOWED_HOSTS = [
     'localhost',
     # '62.84.119.45',
 ]
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -53,7 +51,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'food.urls'
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -83,7 +80,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
 
 
 AUTH_USER_MODEL = 'users.User'
