@@ -100,7 +100,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                 )
             })
         return data
-    
+
     def validate_tags(self, tag):
         if not tag:
             raise ValidationError(

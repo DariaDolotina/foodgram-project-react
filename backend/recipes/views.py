@@ -157,7 +157,7 @@ class DownloadShoppingCart(APIView):
         ingredients = list(IngredientAmount.objects.filter(
             recipe__shopping_cart__user=user).values_list(
                 'ingredients__name', 'amount', 'ingredients__measurement_unit')
-                )
+            )
         buying_list = {}
         for ingredient in ingredients:
             amount = ingredient.amount
@@ -169,8 +169,9 @@ class DownloadShoppingCart(APIView):
                     'amount': amount
                 }
             else:
-                buying_list[name]['amount'] = (buying_list[name]['amount']
-                                                + amount)
+                buying_list[name]['amount'] = (
+                    buying_list[name]['amount'] + amount
+                )
         wishlist = []
         for item in ingredients:
             wishlist.append(f'{item} - {ingredients[item]["amount"]} '
