@@ -84,7 +84,16 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         ingredients = self.initial_data.get('ingredients')
+        ingredients_set = set()
         cooking_time = self.initial_data.get('cooking_time')
+        if not ingredients:
+            raise ValidationError('Выберите ингредиенты')
+        if int(cooking_time) <= 0:
+            raise serializers.ValidationError({
+                'cooking_time': (
+                    'Значение должно быть положительным'
+                )
+            })
         for ingredient in ingredients:
             if int(ingredient['amount']) <= 0:
                 raise serializers.ValidationError({
@@ -92,19 +101,22 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                         'Значение должно быть положительным'
                     )
                 })
-        if int(cooking_time) <= 0:
-            raise serializers.ValidationError({
-                'cooking_time': (
-                    'Значение должно быть положительным'
-                )
-            })
+            if ingredient in ingredients_set:
+                raise ValidationError('Ингредиент уже добавлен')
+            ingredients_set.add(ingredient)
         return data
 
     def validate_tags(self, tag):
+        tags = self.initial_data.get('tag')
+        tags_set = set()
         if not tag:
             raise ValidationError(
-                "Выберите минимум один тег"
+                'Выберите минимум один тег'
             )
+        for tag in tags:
+            if tag in tags_set:
+                raise ValidationError('Этот тэг уже выбран')
+            tags_set.add(tag)
         return tag
 
     def add_recipe_ingredients(self, ingredients, recipe):
@@ -152,7 +164,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 class RecipeSubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = ["id", "name", "image", "cooking_time"]
+        fields = ['id', 'name', 'image', 'cooking_time']
 
 
 class FollowSerializer(serializers.ModelSerializer):

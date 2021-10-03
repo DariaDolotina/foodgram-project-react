@@ -1,6 +1,6 @@
 from django.contrib import admin
-
 from users.models import User
+
 from .models import Favorite, Follow, Ingredient, IngredientAmount, Recipe, Tag
 
 
@@ -36,7 +36,6 @@ class RecipeAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
     def get_ingredients(self, obj):
-        # return "\n".join([p.ingredients for p in self.ingredient.all()])
         return IngredientAmount.objects.filter(
             recipe__amounts__recipe=obj
         ).values_list(
