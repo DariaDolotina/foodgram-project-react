@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 from rest_framework.serializers import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
+
 from users.models import User
 from users.serializers import UserSerializer
 
@@ -123,15 +124,8 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         tags_data = validated_data.pop('tag')
         ingredients_data = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(author=author, **validated_data)
-        for ingredient in ingredients_data:
-            amount = ingredient['amount']
-            id = ingredient['id']
-            IngredientAmount.objects.create(
-                ingredient=get_object_or_404(Ingredient, id=id),
-                recipe=recipe, amount=amount
-            )
-        for tag in tags_data:
-            recipe.tags.add(tag)
+        self.add_recipe_ingredients(ingredients_data, recipe)
+        recipe.tags.set(tags_data)
         return recipe
 
     def update(self, recipe, validated_data):

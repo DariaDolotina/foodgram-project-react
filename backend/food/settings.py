@@ -3,10 +3,7 @@ from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'bv@k*n%vv*pssdrx1((v^#=0*v53e@@nby6w5e@d)%=z_^qo5e'
-# os.environ.get('SECRET_KEY')
-
-# bv@k*n%vv*pssdrx1((v^#=0*v53e@@nby6w5e@d)%=z_^qo5e'
+SECRET_KEY = os.environ.get('SECRET_KEY', default='bv@k*n%vv*pssdrx1((v^#=0*v53e@@nby6w5e@d)%=z_^qo5e')
 
 DEBUG = True
 
@@ -72,12 +69,12 @@ WSGI_APPLICATION = 'food.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': '5432',
+        'ENGINE': os.environ.get('ENGINE', default='django.db.backends.postgresql'),
+        'NAME': os.environ.get('DB_NAME', default='postgres'),
+        'USER': os.environ.get('DB_USER', default='postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', default='postgres'),
+        'HOST': os.environ.get('DB_HOST', default='db'),
+        'PORT': os.environ.get('DB_PORT', default=5432),
     }
 }
 
