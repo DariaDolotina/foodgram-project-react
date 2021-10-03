@@ -1,5 +1,4 @@
 from rest_framework.permissions import AllowAny
-
 from djoser.views import UserViewSet
 
 from .models import User
