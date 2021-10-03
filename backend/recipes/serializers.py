@@ -111,7 +111,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         tags_set = set()
         if not tag:
             raise ValidationError(
-                "Выберите минимум один тег"
+                'Выберите минимум один тег'
             )
         for tag in tags:
             if tag in tags_set:
@@ -164,7 +164,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 class RecipeSubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = ["id", "name", "image", "cooking_time"]
+        fields = ['id', 'name', 'image', 'cooking_time']
 
 
 class FollowSerializer(serializers.ModelSerializer):

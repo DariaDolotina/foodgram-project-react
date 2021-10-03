@@ -46,7 +46,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeReadSerializer
         return RecipeWriteSerializer
 
-    @action(methods=["GET", "DELETE"],
+    @action(methods=['GET', 'DELETE'],
             url_path='favorite', url_name='favorite',
             permission_classes=[permissions.IsAuthenticated], detail=True)
     def favorite(self, request, pk):
@@ -54,7 +54,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer = FavoritesSerializer(
             data={'user': request.user.id, 'recipe': recipe.id}
         )
-        if request.method == "GET":
+        if request.method == 'GET':
             serializer.is_valid(raise_exception=True)
             serializer.save(recipe=recipe, user=request.user)
             serializer = RecipeSubscriptionSerializer(recipe)
@@ -69,19 +69,19 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class FollowViewSet(viewsets.ModelViewSet):
     serializer_class = FollowSerializer
     permission_classes = [IsAdminOrIsAuthorOrReadOnly]
-    lookup_field = "author_id"
+    lookup_field = 'author_id'
 
     def get_queryset(self):
         user = self.request.user
         return Follow.objects.filter(user=user)
 
     def perform_create(self, serializer):
-        author = get_object_or_404(User, pk=self.kwargs.get("author_id"))
+        author = get_object_or_404(User, pk=self.kwargs.get('author_id'))
         serializer.save(user=self.request.user, author=author)
 
     def perform_destroy(self, instance):
         user = self.request.user
-        author = get_object_or_404(User, pk=self.kwargs.get("author_id"))
+        author = get_object_or_404(User, pk=self.kwargs.get('author_id'))
         follow = get_object_or_404(Follow, user=user, author=author)
         follow.delete()
 
