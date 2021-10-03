@@ -27,7 +27,7 @@ class Ingredient(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=200, unique=True)
     color = ColorField(default='#FF0000')
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True)
 
     class Meta:
         verbose_name = 'Тег'
@@ -87,7 +87,9 @@ class Recipe(models.Model):
 
 class IngredientAmount(models.Model):
     amount = models.PositiveIntegerField(
-        validators=[MinValueValidator(0.1,'Значение не может быть меньше 0.1')]
+        validators=[
+            MinValueValidator(0.1, 'Значение не может быть меньше 0.1')
+        ]
     )
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE,
@@ -109,7 +111,7 @@ class IngredientAmount(models.Model):
         ]
 
     def __str__(self):
-        return (self.ingredient.name)
+        return self.ingredient.name
 
 
 class Follow(models.Model):

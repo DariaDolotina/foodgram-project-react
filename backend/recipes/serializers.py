@@ -1,7 +1,6 @@
 from django.db.models import F
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-from rest_framework.generics import get_object_or_404
 from rest_framework.serializers import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
 from users.models import User
@@ -85,7 +84,16 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         ingredients = self.initial_data.get('ingredients')
+        ingredients_set = set()
         cooking_time = self.initial_data.get('cooking_time')
+        if not ingredients:
+            raise ValidationError('Выберите ингредиенты')
+        if int(cooking_time) <= 0:
+            raise serializers.ValidationError({
+                'cooking_time': (
+                    'Значение должно быть положительным'
+                )
+            })
         for ingredient in ingredients:
             if int(ingredient['amount']) <= 0:
                 raise serializers.ValidationError({
@@ -93,19 +101,22 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                         'Значение должно быть положительным'
                     )
                 })
-        if int(cooking_time) <= 0:
-            raise serializers.ValidationError({
-                'cooking_time': (
-                    'Значение должно быть положительным'
-                )
-            })
+            if ingredient in ingredients_set:
+                raise ValidationError('Ингредиент уже добавлен')
+            ingredients_set.add(ingredient)
         return data
 
     def validate_tags(self, tag):
+        tags = self.initial_data.get('tag')
+        tags_set = set()
         if not tag:
             raise ValidationError(
                 "Выберите минимум один тег"
             )
+        for tag in tags:
+            if tag in tags_set:
+                raise ValidationError('Этот тэг уже выбран')
+            tags_set.add(tag)
         return tag
 
     def add_recipe_ingredients(self, ingredients, recipe):
@@ -123,15 +134,8 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         tags_data = validated_data.pop('tag')
         ingredients_data = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(author=author, **validated_data)
-        for ingredient in ingredients_data:
-            amount = ingredient['amount']
-            id = ingredient['id']
-            IngredientAmount.objects.create(
-                ingredient=get_object_or_404(Ingredient, id=id),
-                recipe=recipe, amount=amount
-            )
-        for tag in tags_data:
-            recipe.tags.add(tag)
+        self.add_recipe_ingredients(ingredients_data, recipe)
+        recipe.tags.set(tags_data)
         return recipe
 
     def update(self, recipe, validated_data):
@@ -164,7 +168,6 @@ class RecipeSubscriptionSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-
     user = serializers.SlugRelatedField(
         slug_field='username',
         read_only=True,
