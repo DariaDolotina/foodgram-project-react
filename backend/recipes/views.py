@@ -5,8 +5,8 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from users.models import User
 
+from users.models import User
 from .filters import IngredientFilter, RecipeFilter
 from .mixins import RetriveAndListViewSet
 from .models import (Favorite, Follow, Ingredient, IngredientAmount, Recipe,

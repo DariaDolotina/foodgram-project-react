@@ -2,6 +2,7 @@ from colorfield.fields import ColorField
 from django.core.validators import MinValueValidator
 from django.db import models
 from pytils.translit import slugify
+
 from users.models import User
 
 
@@ -56,7 +57,7 @@ class Recipe(models.Model):
     )
     ingredients = models.ManyToManyField(
         Ingredient, through='IngredientAmount',
-        related_name='recipes', verbose_name='Ингредиенты'
+        verbose_name='Ингредиенты'
     )
     tags = models.ManyToManyField(
         'Tag',
@@ -96,7 +97,7 @@ class IngredientAmount(models.Model):
         related_name='amounts',
     )
     ingredient = models.ForeignKey(
-        Ingredient, on_delete=models.CASCADE,
+        Ingredient, on_delete=models.PROTECT,
         related_name='amounts',
     )
 
