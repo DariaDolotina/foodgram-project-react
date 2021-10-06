@@ -22,7 +22,7 @@ services:
     depends_on:
       - db
     env_file:
-      - ../backend/.env
+      - ./.env
   
   nginx:
     image: nginx:1.19.3
