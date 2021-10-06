@@ -22,7 +22,7 @@ jobs:
           push: true
           context: backend/ 
           tags: happytreefriend/foodgram:latest
-   deploy:
+  deploy:
     runs-on: ubuntu-latest
     needs: build_and_push_to_docker_hub
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
