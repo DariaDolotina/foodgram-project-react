@@ -89,20 +89,17 @@ class Recipe(models.Model):
 class IngredientAmount(models.Model):
     amount = models.PositiveIntegerField(
         validators=[
-            MinValueValidator(0.1, 'Значение не может быть меньше 0.1')
+            MinValueValidator(1, 'Значение не может быть меньше 1')
         ]
     )
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE,
-        related_name='amounts',
     )
     ingredient = models.ForeignKey(
         Ingredient, on_delete=models.PROTECT,
-        related_name='amounts',
     )
 
     class Meta:
-        auto_created = True
         verbose_name = 'Количество в рецепте'
         constraints = [
             models.UniqueConstraint(

@@ -62,15 +62,16 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
     def get_ingredients(self, obj):
         queryset = IngredientAmount.objects.filter(recipe=obj)
-        return IngredientAmountSerializer(instance=queryset, many=True).data
+        return IngredientAmountSerializer(queryset, many=True).data
 
     def get_is_favorited(self, obj):
-        user = self.context['request'].user
-        return obj.favorite_recipe.filter(user=user).exists()
+        request = self.context.get('request')
+        return Favorite.objects.filter(recipe=obj, user=request.user).exists()
 
     def get_is_in_shopping_cart(self, obj):
-        user = self.context['request'].user
-        return obj.shopping_cart.filter(user=user).exists()
+        request = self.context.get('request')
+        return ShoppingCart.objects.filter(recipe=obj,
+                                           user=request.user).exists()
 
 
 class AddIngredientToRecipeSerializer(serializers.ModelSerializer):
@@ -80,6 +81,7 @@ class AddIngredientToRecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientAmount
         fields = ('id', 'amount')
+
 
 class RecipeWriteSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
@@ -132,7 +134,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             tags_set.add(tag)
         return data
 
-    def add_recipe_ingredients(self, ingredients, recipe):
+    def add_ingredients(self, ingredients, recipe):
         for ingredient in ingredients:
             ingredient_id = ingredient['id']
             amount = ingredient['amount']
@@ -147,7 +149,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         tags_data = validated_data.pop('tags')
         ingredients_data = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(author=author, **validated_data)
-        self.add_recipe_ingredients(ingredients_data, recipe)
+        self.add_ingredients(ingredients_data, recipe)
         recipe.tags.set(tags_data)
         return recipe
 
@@ -160,7 +162,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         if 'ingredients' in self.initial_data:
             ingredients = validated_data.pop('ingredients')
             recipe.ingredients.clear()
-            self.add_recipe_ingredients(ingredients, recipe)
+            self.add_ingredients(ingredients, recipe)
         if 'tags' in self.initial_data:
             tags_data = validated_data.pop('tags')
             recipe.tags.set(tags_data)

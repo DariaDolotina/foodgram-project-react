@@ -15,11 +15,15 @@ class UserAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
+class IngredientAmountInLine(admin.TabularInline):
+    model = IngredientAmount
+
+
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'measurement_unit')
     list_filter = ('name', )
-
+    
 
 @admin.register(Follow)
 class FollowAdmin(admin.ModelAdmin):
@@ -30,17 +34,11 @@ class FollowAdmin(admin.ModelAdmin):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'author', 'get_ingredients')
+    list_display = ('pk', 'name', 'author')
     search_fields = ('name', 'author')
     list_filter = ('author', 'name', 'tags')
+    inlines = [IngredientAmountInLine]
     empty_value_display = '-пусто-'
-
-    def get_ingredients(self, obj):
-        return IngredientAmount.objects.filter(
-            recipe__amounts__recipe=obj
-        ).values_list(
-            'ingredients__name', 'amount', 'ingredients__measurement_unit'
-        )
 
     def get_favorited(self, obj):
         return Favorite.objects.filter(recipe=obj).count()
