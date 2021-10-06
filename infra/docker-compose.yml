@@ -8,11 +8,11 @@ services:
     env_file:
       - ./.env
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: happytreefriend/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
+    depends_on:
+      - db
   web:
     image: happytreefriend/foodgram:latest
     restart: always
