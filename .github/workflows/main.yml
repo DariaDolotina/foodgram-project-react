@@ -33,8 +33,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }} 
-          stack_file_name: docker-compose.yaml
+          stack_file_name: docker-compose.yml
           script: |
             sudo docker pull happytreefriend/foodgram:latest
             sudo docker-compose stop
