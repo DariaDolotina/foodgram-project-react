@@ -40,7 +40,7 @@ jobs:
             sudo docker-compose rm web
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
-            echo DB_NAME=${{ secrets.DB_NAME }} >> .env
+            echo POSTGRES_NAME=${{ secrets.POSTGRES_NAME }} >> .env
             echo DB_USER=${{ secrets.DB_USER }} >> .env
             echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
             echo DB_HOST=${{ secrets.DB_HOST }} >> .env
