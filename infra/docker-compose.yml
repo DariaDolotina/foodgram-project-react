@@ -7,7 +7,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file: 
-      - ../backend/.env
+      - ./.env
   frontend:
     image: happytreefriend/foodgram-project-react-frontend:v1.0.0 
     volumes: 
@@ -21,7 +21,7 @@ services:
     depends_on: 
       - db 
     env_file: 
-      - ../backend/.env
+      - ./.env
   nginx:
     image: nginx:1.19.3 
     ports: 
