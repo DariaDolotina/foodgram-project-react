@@ -22,7 +22,8 @@ services:
 
 
   frontend:
-    image: happytreefriend/foodgram-project-react-frontend:v1.0.0
+    build:
+      context: ../frontend
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
