@@ -37,7 +37,6 @@ class TagsViewSet(RetriveAndListViewSet):
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all().order_by('-id')
-    serializer_class = RecipeReadSerializer
     permission_classes = [IsAdminOrIsAuthorOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filter_class = RecipeFilter
@@ -70,6 +69,37 @@ class RecipeViewSet(viewsets.ModelViewSet):
         favorite.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @action(
+        methods=['get', 'delete'],
+        detail=True,
+        permission_classes=(permissions.IsAuthenticated, )
+    )
+    def shopping_cart(self, request, pk=None):
+        user = request.user
+        recipe = get_object_or_404(Recipe, pk=pk)
+        if request.method == 'GET':
+            if ShoppingCart.objects.filter(user=user, recipe=recipe).exists():
+                data = {
+                    'errors': 'Этот рецепт уже есть в списке покупок'
+                }
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+            shopping_cart = ShoppingCart.objects.create(
+                user=user, recipe=recipe)
+            serializer = ShoppingCartSerializer(
+                shopping_cart, context={'request': request}
+            )
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        shopping_cart = ShoppingCart.objects.filter(
+            user=user, recipe=recipe
+        )
+        if not shopping_cart.exists():
+            data = {
+                'errors': 'Этого рецепта нет в списке покупок'
+            }
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        shopping_cart.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class FollowViewSet(viewsets.ModelViewSet):
     serializer_class = FollowSerializer
@@ -91,65 +121,65 @@ class FollowViewSet(viewsets.ModelViewSet):
         follow.delete()
 
 
-class FavoritesView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+# class FavoritesView(APIView):
+#     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, recipe_id):
-        user = request.user
-        data = {
-            'user': user.id,
-            'recipe': recipe_id,
-        }
-        serializer = FavoritesSerializer(
-            data=data,
-            context={'request': request}
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+#     def get(self, request, recipe_id):
+#         user = request.user
+#         data = {
+#             'user': user.id,
+#             'recipe': recipe_id,
+#         }
+#         serializer = FavoritesSerializer(
+#             data=data,
+#             context={'request': request}
+#         )
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
 
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED
-        )
+#         return Response(
+#             serializer.data,
+#             status=status.HTTP_201_CREATED
+#         )
 
-    def delete(self, request, recipe_id):
-        user = request.user
-        recipe = get_object_or_404(Recipe, id=recipe_id)
-        obj = get_object_or_404(Favorite, user=user, recipe=recipe)
-        obj.delete()
+#     def delete(self, request, recipe_id):
+#         user = request.user
+#         recipe = get_object_or_404(Recipe, id=recipe_id)
+#         obj = get_object_or_404(Favorite, user=user, recipe=recipe)
+#         obj.delete()
 
-        return Response(
-            status=status.HTTP_204_NO_CONTENT
-        )
+#         return Response(
+#             status=status.HTTP_204_NO_CONTENT
+#         )
 
 
-class ShoppingCartView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    http_method_names = ['get', 'delete']
+# class ShoppingCartView(APIView):
+#     permission_classes = [permissions.IsAuthenticated]
+#     http_method_names = ['get', 'delete']
 
-    def get(self, request, recipe_id):
-        user = request.user
-        data = {
-            'user': user.id,
-            'recipe': recipe_id,
-        }
+#     def get(self, request, recipe_id):
+#         user = request.user
+#         data = {
+#             'user': user.id,
+#             'recipe': recipe_id,
+#         }
 
-        context = {'request': request}
-        serializer = ShoppingCartSerializer(data=data, context=context)
+#         context = {'request': request}
+#         serializer = ShoppingCartSerializer(data=data, context=context)
 
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def delete(self, request, recipe_id):
-        user = request.user
-        recipe = get_object_or_404(Recipe, id=recipe_id)
-        obj = get_object_or_404(ShoppingCart, user=user, recipe=recipe)
-        obj.delete()
+#     def delete(self, request, recipe_id):
+#         user = request.user
+#         recipe = get_object_or_404(Recipe, id=recipe_id)
+#         obj = get_object_or_404(ShoppingCart, user=user, recipe=recipe)
+#         obj.delete()
 
-        return Response(
-            status=status.HTTP_204_NO_CONTENT
-        )
+#         return Response(
+#             status=status.HTTP_204_NO_CONTENT
+#         )
 
 
 class DownloadShoppingCart(APIView):
