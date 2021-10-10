@@ -153,24 +153,37 @@ class DownloadShoppingCart(APIView):
 
     def get(self, request):
         user = request.user
-        ingredients = list(IngredientAmount.objects.filter(
+        ingredients = IngredientAmount.objects.filter(
             recipe__shopping_cart__user=user).values_list(
-                'ingredient__name', 'amount', 'ingredient__measurement_unit')
-        )
+                'ingredient__name', 'amount', 'ingredient__measurement_unit',
+                named=True
+                )
         buying_list = {}
         for ingredient in ingredients:
+            name = ingredient.ingredient__name
+            measurement_unit = ingredient.ingredient__measurement_unit
             amount = ingredient.amount
-            name = ingredient.ingredient.name
-            measurement_unit = ingredient.ingredient.measurement_unit
             if name not in buying_list:
                 buying_list[name] = {
                     'measurement_unit': measurement_unit,
                     'amount': amount
                 }
             else:
-                buying_list[name]['amount'] = (
-                    buying_list[name]['amount'] + amount
-                )
+                buying_list[name]['amount'] += amount
+        
+        # for ingredient in ingredients:
+        #     amount = ingredient.amount
+        #     name = ingredient.ingredient.name
+        #     measurement_unit = ingredient.ingredient.measurement_unit
+        #     if name not in buying_list:
+        #         buying_list[name] = {
+        #             'measurement_unit': measurement_unit,
+        #             'amount': amount
+        #         }
+        #     else:
+        #         buying_list[name]['amount'] = (
+        #             buying_list[name]['amount'] + amount
+        #         )
         wishlist = []
         for item in ingredients:
             wishlist.append(f'{item} - {ingredients[item]["amount"]} '
