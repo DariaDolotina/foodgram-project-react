@@ -32,10 +32,6 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
         source='ingredient.measurement_unit'
     )
 
-    # class Meta:
-    #     model = IngredientAmount
-    #     fields = ('id', 'name', 'measurement_unit', 'amount')
-
     class Meta:
         model = IngredientAmount
         fields = ('id', 'name', 'measurement_unit', 'amount')
@@ -88,7 +84,6 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
 class AddIngredientToRecipeSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
-    # id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
     amount = serializers.IntegerField()
 
     class Meta:
@@ -249,4 +244,3 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         context = {'request': request}
         return RecipeSerializer(obj.recipe, context=context).data
-

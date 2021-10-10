@@ -121,67 +121,6 @@ class FollowViewSet(viewsets.ModelViewSet):
         follow.delete()
 
 
-# class FavoritesView(APIView):
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def get(self, request, recipe_id):
-#         user = request.user
-#         data = {
-#             'user': user.id,
-#             'recipe': recipe_id,
-#         }
-#         serializer = FavoritesSerializer(
-#             data=data,
-#             context={'request': request}
-#         )
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-
-#         return Response(
-#             serializer.data,
-#             status=status.HTTP_201_CREATED
-#         )
-
-#     def delete(self, request, recipe_id):
-#         user = request.user
-#         recipe = get_object_or_404(Recipe, id=recipe_id)
-#         obj = get_object_or_404(Favorite, user=user, recipe=recipe)
-#         obj.delete()
-
-#         return Response(
-#             status=status.HTTP_204_NO_CONTENT
-#         )
-
-
-# class ShoppingCartView(APIView):
-#     permission_classes = [permissions.IsAuthenticated]
-#     http_method_names = ['get', 'delete']
-
-#     def get(self, request, recipe_id):
-#         user = request.user
-#         data = {
-#             'user': user.id,
-#             'recipe': recipe_id,
-#         }
-
-#         context = {'request': request}
-#         serializer = ShoppingCartSerializer(data=data, context=context)
-
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-#     def delete(self, request, recipe_id):
-#         user = request.user
-#         recipe = get_object_or_404(Recipe, id=recipe_id)
-#         obj = get_object_or_404(ShoppingCart, user=user, recipe=recipe)
-#         obj.delete()
-
-#         return Response(
-#             status=status.HTTP_204_NO_CONTENT
-#         )
-
-
 class DownloadShoppingCart(APIView):
     permission_classes = [permissions.IsAuthenticated]
     http_method_names = ['get', ]
