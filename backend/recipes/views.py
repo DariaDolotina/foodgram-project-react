@@ -11,6 +11,7 @@ from .filters import IngredientFilter, RecipeFilter
 from .mixins import RetriveAndListViewSet
 from .models import (Favorite, Follow, Ingredient, IngredientAmount, Recipe,
                      ShoppingCart, Tag)
+from .pagination import CustomPageNumberPaginator
 from .permissions import IsAdminOrIsAuthorOrReadOnly
 from .serializers import (FavoritesSerializer, FollowSerializer,
                           IngredientsSerializer, RecipeReadSerializer,
@@ -40,11 +41,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrIsAuthorOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filter_class = RecipeFilter
+    pagination_class = CustomPageNumberPaginator
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return RecipeReadSerializer
         return RecipeWriteSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
     @action(methods=['GET', 'DELETE'],
             url_path='favorite', url_name='favorite',
