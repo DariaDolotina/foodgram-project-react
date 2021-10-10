@@ -37,6 +37,7 @@ jobs:
           passphrase: ${{ secrets.PASSPHRASE }}
           stack_file_name: docker-compose.yaml
           script: |
+            sudo docker pull happytreefriend/foodgram-project-react-frontend
             sudo docker pull happytreefriend/foodgram-project-react
             sudo docker-compose stop
             sudo docker-compose rm web
@@ -50,4 +51,3 @@ jobs:
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             sudo docker-compose up -d
-
