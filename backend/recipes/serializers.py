@@ -99,7 +99,7 @@ class AddIngredientToRecipeSerializer(serializers.ModelSerializer):
 class RecipeWriteSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     image = Base64ImageField()
-    ingredients = AddIngredientToRecipeSerializer(many=True)
+    ingredients = IngredientAmountSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
     )
@@ -130,7 +130,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         for ingredient in ingredients:
             IngredientAmount.objects.create(
                 recipe=recipe,
-                ingredient_id=ingredient.get('id'),
+                ingredient_name=ingredient.get('id'),
                 amount=ingredient.get('amount'),
             )
     def create(self, validated_data):
