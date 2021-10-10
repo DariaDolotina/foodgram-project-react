@@ -43,7 +43,6 @@ jobs:
           passphrase: ${{ secrets.PASSPHRASE }}
           stack_file_name: docker-compose.yml
           script: |
-            sudo docker pull happytreefriend/foodgram-project-react-frontend
             sudo docker pull happytreefriend/foodgram-project-react
             sudo docker-compose stop
             sudo docker-compose rm web
