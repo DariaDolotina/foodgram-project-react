@@ -1,3 +1,4 @@
+![example workflow](https://github.com/DariaDolotina/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 # praktikum_new_diplom
 Foodgram - сервис для публикации рецептов. 
 Функционал:
