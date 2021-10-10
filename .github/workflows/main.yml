@@ -41,13 +41,12 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
-          stack_file_name: docker-compose.yaml
+          stack_file_name: docker-compose.yml
           script: |
             sudo docker pull happytreefriend/foodgram-project-react-frontend
             sudo docker pull happytreefriend/foodgram-project-react
             sudo docker-compose stop
             sudo docker-compose rm web
-            sudo rm .env
             touch .env 
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
@@ -57,7 +56,6 @@ jobs:
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             sudo docker-compose up -d
-            sudo docker-compose exec -T web python manage.py makemigrations recipes
-            sudo docker-compose exec -T web python manage.py makemigrations users
+            sudo docker-compose exec -T web python manage.py makemigrations
             sudo docker-compose exec -T web python manage.py migrate --noinput
             
