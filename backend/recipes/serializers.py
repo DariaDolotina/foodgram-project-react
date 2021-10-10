@@ -162,11 +162,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
     def add_ingredients(self, ingredients, recipe):
         for ingredient in ingredients:
-            # ingredient_id=ingredient.get('id')
-            # amount = ingredient.get('amount')
-            # if (IngredientAmount.objects.filter(
-            #         recipe=recipe, ingredient=ingredient_id).exists()):
-            #     amount += F('amount')
             IngredientAmount.objects.create(
                 recipe=recipe,
                 ingredient_id=ingredient.get('id'),
@@ -180,16 +175,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         self.add_recipe_ingredients(ingredients_data, recipe)
         recipe.tags.set(tags_data)
         return recipe
-
-    # def create(self, validated_data):
-    #     author = self.context.get('request').user
-    #     tags_data = validated_data.pop('tags')
-    #     # ingredients_data = validated_data.pop('ingredientamount_set')
-    #     ingredients_data = validated_data.pop('ingredients')
-    #     recipe = Recipe.objects.create(author=author, **validated_data)
-    #     recipe.tags.set(tags_data)
-    #     self.add_ingredients(ingredients_data, recipe)
-    #     return recipe
 
     def update(self, recipe, validated_data):
         recipe.name = validated_data.get('name', recipe.name)
@@ -217,35 +202,6 @@ class RecipeSubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ['id', 'name', 'image', 'cooking_time']
-
-
-# class FollowSerializer(serializers.ModelSerializer):
-#     user = serializers.SlugRelatedField(
-#         slug_field='username',
-#         read_only=True,
-#         default=serializers.CurrentUserDefault()
-#     )
-
-#     following = serializers.SlugRelatedField(
-#         slug_field='username',
-#         queryset=User.objects.all()
-#     )
-
-#     class Meta:
-#         model = Follow
-#         fields = '__all__'
-#         validators = [
-#             UniqueTogetherValidator(
-#                 queryset=Follow.objects.all(),
-#                 fields=['user', 'following']
-#             )
-#         ]
-
-#     def validate_following(self, following):
-#         if self.context.get('request').method == 'POST':
-#             if self.context.get('request').user == following:
-#                 raise ValidationError('Нельзя подписаться на себя')
-#         return following
 
 
 class FollowSerializer(serializers.ModelSerializer):
@@ -327,3 +283,4 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         context = {'request': request}
         return RecipeSerializer(obj.recipe, context=context).data
+
