@@ -158,7 +158,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         return recipe
 
     def to_representation(self, recipe):
-        data = RecipeSerializer(recipe, context={'request':
+        data = RecipeReadSerializer(recipe, context={'request':
                                     self.context.get('request')}).data
         return data
 
