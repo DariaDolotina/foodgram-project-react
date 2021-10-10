@@ -109,7 +109,7 @@ class IngredientAmount(models.Model):
         ]
 
     def __str__(self):
-        return self.ingredient.name
+        return self.ingredient.id
 
 
 class Follow(models.Model):

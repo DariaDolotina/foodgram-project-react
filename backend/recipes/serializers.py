@@ -125,41 +125,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                                   ' отрицательным числом или нулем!')
         return data
 
-    # def validate(self, data):
-    #     ingredients = self.initial_data.get('ingredients')
-    #     ingredients_set = set()
-    #     tags = self.initial_data.get('tags')
-    #     tags_set = set()
-    #     cooking_time = self.initial_data.get('cooking_time')
-    #     if not ingredients:
-    #         raise ValidationError('Выберите ингредиенты')
-    #     if not tags:
-    #         raise ValidationError(
-    #             'Выберите минимум один тег'
-    #         )
-    #     if int(cooking_time) <= 0:
-    #         raise ValidationError({
-    #             'cooking_time': (
-    #                 'Значение должно быть положительным'
-    #             )
-    #         })
-    #     for ingredient in ingredients:
-    #         if int(ingredient['amount']) <= 0:
-    #             raise ValidationError({
-    #                 'ingredients': (
-    #                     'Значение должно быть положительным'
-    #                 )
-    #             })
-    #         id = ingredient.get('id')
-    #         if id in ingredients_set:
-    #             raise ValidationError('Ингредиент уже добавлен')
-    #         ingredients_set.add(id)
-    #     for tag in tags:
-    #         if tag in tags_set:
-    #             raise ValidationError('Этот тэг уже выбран')
-    #         tags_set.add(tag)
-    #     return data
-
     def add_ingredients(self, ingredients, recipe):
         for ingredient in ingredients:
             IngredientAmount.objects.create(
