@@ -172,7 +172,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         tags_data = validated_data.pop('tags')
         ingredients_data = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(image=image, **validated_data)
-        self.add_recipe_ingredients(ingredients_data, recipe)
+        self.add_ingredients(ingredients_data, recipe)
         recipe.tags.set(tags_data)
         return recipe
 
