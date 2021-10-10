@@ -28,5 +28,5 @@ class RecipeFilter(filters.FilterSet):
 
     def get_shopping(self, queryset, name, value):
         if value:
-            return Recipe.objects.filter(shoppingcart__user=self.request.user)
+            return Recipe.objects.filter(shopping_cart__user=self.request.user)
         return Recipe.objects.all()
