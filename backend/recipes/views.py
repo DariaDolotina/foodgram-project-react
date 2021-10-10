@@ -155,7 +155,7 @@ class DownloadShoppingCart(APIView):
         user = request.user
         ingredients = list(IngredientAmount.objects.filter(
             recipe__shopping_cart__user=user).values_list(
-                'ingredients__name', 'amount', 'ingredients__measurement_unit')
+                'ingredient__name', 'amount', 'ingredient__measurement_unit')
         )
         buying_list = {}
         for ingredient in ingredients:
