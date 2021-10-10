@@ -108,9 +108,6 @@ class IngredientAmount(models.Model):
             )
         ]
 
-    def __str__(self):
-        return self.ingredient.id
-
 
 class Follow(models.Model):
     user = models.ForeignKey(
