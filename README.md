@@ -15,32 +15,32 @@ Foodgram - сервис для публикации рецептов.
 - локально отредактируйте файл infra/nginx.conf и в строке server_name впишите свой IP;
 - скопируйте файлы docker-compose.yml и nginx.conf из директории infra на сервер;
 - на сервере создайте .env файл и впишите:
-    DB_ENGINE=<django.db.backends.postgresql>
-    DB_NAME=<имя базы данных postgres>
-    DB_USER=<пользователь бд>
-    DB_PASSWORD=<пароль>
-    DB_HOST=<db>
-    DB_PORT=<5432>
-    SECRET_KEY=<секретный ключ проекта django>
+    - DB_ENGINE=<django.db.backends.postgresql>
+    - DB_NAME=<имя базы данных postgres>
+    - DB_USER=<пользователь бд>
+    - DB_PASSWORD=<пароль>
+    - DB_HOST=<db>
+    - DB_PORT=<5432>
+    - SECRET_KEY=<секретный ключ проекта django>
 - для работы с Workflow добавьте в Secrets GitHub переменные окружения для работы:
-    DB_ENGINE=<django.db.backends.postgresql>
-    DB_NAME=<имя базы данных postgres>
-    DB_USER=<пользователь бд>
-    DB_PASSWORD=<пароль>
-    DB_HOST=<db>
-    DB_PORT=<5432>
-    DOCKER_PASSWORD=<пароль от DockerHub>
-    DOCKER_USERNAME=<имя пользователя>
-    SECRET_KEY=<секретный ключ проекта django>
-    USER=<username для подключения к серверу>
-    HOST=<IP сервера>
-    PASSPHRASE=<пароль для сервера, если он установлен>
-    SSH_KEY=<ваш SSH ключ (для получения команда: cat ~/.ssh/id_rsa)>
+    - DB_ENGINE=<django.db.backends.postgresql>
+    - DB_NAME=<имя базы данных postgres>
+    - DB_USER=<пользователь бд>
+    - DB_PASSWORD=<пароль>
+    - DB_HOST=<db>
+    - DB_PORT=<5432>
+    - DOCKER_PASSWORD=<пароль от DockerHub>
+    - DOCKER_USERNAME=<имя пользователя>
+    - SECRET_KEY=<секретный ключ проекта django>
+    - USER=<username для подключения к серверу>
+    - HOST=<IP сервера>
+    - PASSPHRASE=<пароль для сервера, если он установлен>
+    - SSH_KEY=<ваш SSH ключ (для получения команда: cat ~/.ssh/id_rsa)>
   
 - на сервере соберите docker-compose и примените миграции:
-  sudo docker-compose -f docker-compose.yml up -d
-  sudo docker-compose exec -T web python manage.py makemigrations
-  sudo docker-compose exec -T web python manage.py migrate --noinput
+  1. sudo docker-compose -f docker-compose.yml up -d
+  2. sudo docker-compose exec -T web python manage.py makemigrations
+  3. sudo docker-compose exec -T web python manage.py migrate --noinput
   
   Проект доступен по адресу:
   
