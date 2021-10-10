@@ -221,8 +221,8 @@ class DownloadShoppingCart(APIView):
         #         )
         wishlist = []
         for item in ingredients:
-            wishlist.append(f'{item} - {ingredients[item]["amount"]} '
-                            f'{ingredients[item]["measurement_unit"]} \n')
+            wishlist.append(f'{item} - {item["amount"]} '
+                            f'{item["measurement_unit"]} \n')
         wishlist.append('\n')
         wishlist.append('FoodGram, 2021')
         response = HttpResponse(wishlist, 'Content-Type: text/plain')

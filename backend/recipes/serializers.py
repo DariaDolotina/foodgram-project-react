@@ -38,7 +38,7 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IngredientAmount
-        fields = ('pk', 'name', 'measurement_unit', 'amount')
+        fields = ('id', 'name', 'measurement_unit', 'amount')
         validators = [
             UniqueTogetherValidator(
                 queryset=IngredientAmount.objects.all(),
@@ -93,7 +93,7 @@ class AddIngredientToRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IngredientAmount
-        fields = ('pk', 'amount')
+        fields = ('id', 'amount')
 
 
 class RecipeWriteSerializer(serializers.ModelSerializer):
