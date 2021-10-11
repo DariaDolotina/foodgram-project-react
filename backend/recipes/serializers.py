@@ -35,12 +35,12 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientAmount
         fields = ('id', 'name', 'measurement_unit', 'amount')
-        # validators = [
-        #     UniqueTogetherValidator(
-        #         queryset=IngredientAmount.objects.all(),
-        #         fields=['ingredient', 'recipe']
-        #     )
-        # ]
+        validators = [
+            UniqueTogetherValidator(
+                queryset=IngredientAmount.objects.all(),
+                fields=['ingredient', 'recipe']
+            )
+        ]
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -85,7 +85,6 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
 
 class AddIngredientToRecipeSerializer(serializers.ModelSerializer):
-    # id = serializers.ReadOnlyField(source='ingredient.id')
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
     amount = serializers.IntegerField()
 
@@ -109,19 +108,19 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             'id', 'author', 'name', 'text', 'image',
             'ingredients', 'tags', 'cooking_time',
         )
-    # def validate_ingredients(self, data):
-    #     ingredients = self.initial_data.get('ingredients')
-    #     if ingredients == []:
-    #         raise ValidationError('Нужно выбрать минимум 1 ингридиент!')
-    #     for ingredient in ingredients:
-    #         if int(ingredient['amount']) <= 0:
-    #             raise ValidationError('Количество должно быть положительным!')
-    #     return data
+    def validate_ingredients(self, data):
+        ingredients = self.initial_data.get('ingredients')
+        if not ingredients: 
+            raise ValidationError('Выберите ингредиенты')
+        for ingredient in ingredients:
+            if int(ingredient['amount']) <= 0:
+                raise ValidationError('Количество должно быть положительным')
+        return data
 
     def validate_cooking_time(self, data):
         if data <= 0:
             raise ValidationError('Время готовки не может быть'
-                                  ' отрицательным числом или нулем!')
+                                  ' отрицательным числом или нулем')
         return data
 
     def add_ingredients(self, ingredients, recipe):
@@ -132,6 +131,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                 ingredient=ingredient_id,
                 amount=ingredient.get('amount'),
             )
+
     def create(self, validated_data):
         image = validated_data.pop('image')
         tags_data = validated_data.pop('tags')
