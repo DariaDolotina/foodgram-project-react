@@ -127,7 +127,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             ingredient_id=ingredient['id']
             IngredientAmount.objects.create(
                 recipe=recipe,
-                # ingredient=ingredient['ingredient']['id']
                 ingredient=ingredient_id,
                 amount=ingredient.get('amount'),
             )

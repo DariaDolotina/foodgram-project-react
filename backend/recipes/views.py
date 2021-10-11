@@ -103,7 +103,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 class FollowViewSet(viewsets.ModelViewSet):
     serializer_class = FollowSerializer
-    permission_classes = [IsAdminOrIsAuthorOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'author_id'
 
     def get_queryset(self):
