@@ -35,12 +35,12 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientAmount
         fields = ('id', 'name', 'measurement_unit', 'amount')
-        validators = [
-            UniqueTogetherValidator(
-                queryset=IngredientAmount.objects.all(),
-                fields=['ingredient', 'recipe']
-            )
-        ]
+        # validators = [
+        #     UniqueTogetherValidator(
+        #         queryset=IngredientAmount.objects.all(),
+        #         fields=['ingredient', 'recipe']
+        #     )
+        # ]
 
 
 class RecipeSerializer(serializers.ModelSerializer):
